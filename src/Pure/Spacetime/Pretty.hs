@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE FlexibleInstances, UndecidableInstances #-}
 module Pure.Spacetime.Pretty where
 
 class Pretty a where
@@ -7,3 +7,5 @@ class Pretty a where
 instance Pretty [Char] where
   pretty = id
 
+instance {-# OVERLAPPABLE #-} Show a => Pretty a where
+  pretty = show

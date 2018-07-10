@@ -1,7 +1,7 @@
-name:                pure-space-time
+name:                pure-spacetime
 version:             0.7.0.0
 synopsis:            Styled views
-homepage:            github.com/grumply/pure-space-time
+homepage:            github.com/grumply/pure-spacetime
 license:             BSD3
 license-file:        LICENSE
 author:              Sean Mackenzie

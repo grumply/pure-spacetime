@@ -27,15 +27,15 @@ instance Magnitude SomeTime
 
 instance Pretty SomeTime where
     pretty (SomeTime d)
-        | d < 0.000000000000001 = printf     "%.0fas" (d * 1000000000000000)
-        | d < 0.000000000001    = printf     "%.0ffs" (d * 1000000000000000)
-        | d < 0.000000001       = printf     "%.0fps" (d * 1000000000000)
-        | d < 0.000001          = printf     "%.3fns" (d * 1000000000)
-        | d < 0.001             = printf     "%.3fμs" (d * 1000000)
-        | d < 1                 = printf     "%.3fms" (d * 1000)
-        | d < 60                = printf     "%.3fs"   d
-        | d < 60^2              = printf "%.0fm %ds"  (d / 60)   (roundi d `mod` 60)
-        | otherwise             = printf "%.0fh %dm"  (d / 60^2) (roundi d `mod` 60^2)
+        | d < 1e-15 = printf     "%.0fas" (d * 1e18)
+        | d < 1e-12 = printf     "%.0ffs" (d * 1e15)
+        | d < 1e-9  = printf     "%.0fps" (d * 1e12)
+        | d < 1e-6  = printf     "%.3fns" (d * 1e9)
+        | d < 1e-3  = printf     "%.3fμs" (d * 1e6)
+        | d < 1     = printf     "%.3fms" (d * 1e3)
+        | d < 60    = printf     "%.3fs"   d
+        | d < 60^2  = printf "%.0fm %ds"  (d / 60)   (roundi d `mod` 60)
+        | otherwise = printf "%.0fh %dm"  (d / 60^2) (roundi d `mod` 60^2)
       where
         roundi :: Double -> Int
         roundi = round

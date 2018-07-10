@@ -5,19 +5,17 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 module Pure.Spacetime (module Pure.Spacetime, module Export) where
 
-import Pure.Spacetime.Space as Export
-import Pure.Spacetime.Time as Export
 
 import Pure.Variance
 import Pure.Data.JSON
 
-import Pure.Spacetime.Improving
-import Pure.Spacetime.Pretty
-import Pure.Spacetime.Similar
-import Pure.Spacetime.Magnitude
-import Pure.Spacetime.Base
-import Pure.Spacetime.Space
-import Pure.Spacetime.Time
+import Pure.Spacetime.Improving  as Export
+import Pure.Spacetime.Pretty as Export
+import Pure.Spacetime.Similar as Export
+import Pure.Spacetime.Magnitude as Export
+import Pure.Spacetime.Base as Export
+import Pure.Spacetime.Space as Export
+import Pure.Spacetime.Time as Export
 
 import Data.Int
 
