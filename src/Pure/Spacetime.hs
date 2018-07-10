@@ -3,6 +3,7 @@
 {-# LANGUAGE PatternSynonyms #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE ExistentialQuantification #-}
 module Pure.Spacetime (module Pure.Spacetime, module Export) where
 
 
@@ -22,6 +23,10 @@ import Data.Int
 import GHC.Generics
 
 import Text.Printf
+
+-- Putting it all together
+data Measure b
+  = forall a. (Magnitude a, Base a, Improving a, Similar a, Pretty a) => Measure (b -> a)
 
 class IsDataRate r where
   toDataRate :: SomeDataRate -> r
