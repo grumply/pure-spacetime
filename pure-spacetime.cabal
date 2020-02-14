@@ -1,14 +1,18 @@
 name:                pure-spacetime
-version:             0.7.0.0
-synopsis:            Styled views
-homepage:            github.com/grumply/pure-spacetime
+version:             0.8.0.0
+synopsis:            Patterns for manipulating relationships between space  time
+homepage:            purehs.org/doc/pure-spacetime
 license:             BSD3
 license-file:        LICENSE
-author:              Sean Mackenzie
-maintainer:          sean@grump.ly
+author:              Sean Hickman
+maintainer:          sean@grumply.com
 category:            Web
 build-type:          Simple
 cabal-version:       >=1.10
+
+source-repository head
+  type: git
+  location: https://github.com/grumply/pure-spacetime.git
 
 library
   exposed-modules:
@@ -26,10 +30,10 @@ library
       Pure.Spacetime.Time
 
   build-depends:
-      base >=4.8
-    , pure >= 0.7 && < 1
-    , pure-json >= 0.7 && < 1
-    , pure-variance >= 0.7 && < 1
+      base
+    , pure
+    , pure-json
+    , pure-variance
 
   hs-source-dirs:      src
   default-language:    Haskell2010
