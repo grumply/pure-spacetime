@@ -7,8 +7,6 @@ module Pure.Spacetime.Percent where
 import Pure.Variance
 import Pure.Data.JSON
 
-import Pure.Spacetime.Pretty
-
 import Control.Arrow
 import Data.Ratio
 import GHC.Generics
@@ -18,11 +16,6 @@ newtype Percent = Percent_ { getPercent :: Double }
   deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON)
 
 instance Vary Percent
-
-instance Pretty Percent where
-    pretty (Percent_ r)
-      | isNaN r   = "0%"
-      | otherwise = printf "%.2f%%" (100 * r)
 
 mkPercent :: (Real a, Real b) => a -> b -> Percent
 mkPercent a b =

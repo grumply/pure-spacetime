@@ -19,12 +19,11 @@ library
       Pure.Spacetime
       Pure.Spacetime.Base
       Pure.Spacetime.Count
-      Pure.Spacetime.Factor
+      Pure.Spacetime.Frequency
       Pure.Spacetime.Improving
       Pure.Spacetime.Magnitude
+      Pure.Spacetime.Multiplier
       Pure.Spacetime.Percent
-      Pure.Spacetime.Pretty
-      Pure.Spacetime.Rate
       Pure.Spacetime.Similar
       Pure.Spacetime.Space
       Pure.Spacetime.Time

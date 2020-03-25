@@ -12,12 +12,11 @@ import Pure.Data.JSON
 
 import Pure.Spacetime.Base as Export
 import Pure.Spacetime.Count as Export
-import Pure.Spacetime.Factor as Export
+import Pure.Spacetime.Multiplier as Export
 import Pure.Spacetime.Improving  as Export
 import Pure.Spacetime.Magnitude as Export
 import Pure.Spacetime.Percent as Export
-import Pure.Spacetime.Pretty as Export
-import Pure.Spacetime.Rate as Export
+import Pure.Spacetime.Frequency as Export
 import Pure.Spacetime.Similar as Export
 import Pure.Spacetime.Space as Export
 import Pure.Spacetime.Time as Export
@@ -28,129 +27,37 @@ import GHC.Generics
 
 import Text.Printf
 
--- Putting it all together
-data Measure b
-  = forall a. (Magnitude a, Base a, Improving a, Similar a, Pretty a) => Measure (b -> a)
-
 class IsDataRate r where
-  toDataRate :: SomeDataRate -> r
-  fromDataRate :: r -> SomeDataRate
+  toDataRate :: BytesPerSecond -> r
+  fromDataRate :: r -> BytesPerSecond
 
-instance IsDataRate Double where
-  toDataRate = getDataRate
-  fromDataRate = SomeDataRate
-
-newtype SomeDataRate = SomeDataRate { getDataRate :: Double }
+newtype BytesPerSecond = BytesPerSecond { getDataRate :: Double }
   deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON)
 
-instance Vary SomeDataRate
+instance Vary BytesPerSecond
 
-instance Improving SomeDataRate
+instance Improving BytesPerSecond
 
-instance Magnitude SomeDataRate
+instance Magnitude BytesPerSecond
 
-instance Similar SomeDataRate
+instance Similar BytesPerSecond
 
-instance Pretty SomeDataRate where
-    pretty (SomeDataRate t)
-        | isNaN t   = "0 B/s"
-        | t < 2^10  = printf "%.0f B/s"  t
-        | t < 2^20  = printf "%.1f KB/s" (t / 2^10)
-        | t < 2^30  = printf "%.1f MB/s" (t / 2^20)
-        | t < 2^40  = printf "%.1f GB/s" (t / 2^30)
-        | otherwise = printf "%.1f TB/s" (t / 2^40)
-
-instance IsDataRate SomeDataRate where
+instance IsDataRate BytesPerSecond where
   toDataRate = id
   fromDataRate = id
 
 viewDataRate :: (IsDataRate r, IsSpace s, IsTime t) => r -> (s,t)
-viewDataRate (fromDataRate -> SomeDataRate r) = (Bytes r,Seconds 1)
+viewDataRate (fromDataRate -> BytesPerSecond r) = (Bytes r,Seconds 1)
 
 mkDataRate :: (IsDataRate r, IsSpace s, IsTime t) => s -> t -> r
 mkDataRate s t =
   let time = realToFrac (fromTime t)
   in toDataRate $
        if time == 0 then
-         SomeDataRate 0
+         BytesPerSecond 0
        else
-         SomeDataRate (realToFrac (fromSpace s) / time)
+         BytesPerSecond (realToFrac (fromSpace s) / time)
 
 pattern DataRate :: (IsSpace s, IsTime t, IsDataRate r) => s -> t -> r
 pattern DataRate s t <- (viewDataRate -> (s,t)) where
   DataRate s t = mkDataRate s t
-
-----------------------------------------
--- GC copy rate
-
-newtype CopyRate = CopyRate { getCopyRate :: SomeDataRate }
-  deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON,Pretty)
-
-instance Vary CopyRate
-
-instance IsDataRate CopyRate where
-  toDataRate = CopyRate
-  fromDataRate = getCopyRate
-
-instance Improving CopyRate -- more throughput is better
-
-instance Magnitude CopyRate
-
-instance Base CopyRate where
-  base _ = 2
-
-instance Similar CopyRate where
-  sim b (DataRate (Megabytes mbps :: SomeSpace) (_ :: SomeTime))
-            (DataRate (Megabytes mbps':: SomeSpace) (_ :: SomeTime))
-    = sim b mbps mbps'
-
-----------------------------------------
--- Allocation Rate
-
-newtype AllocationRate = AllocationRate { getAllocationRate :: SomeDataRate }
-  deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON,Pretty)
-
-instance Vary AllocationRate
-
-instance Magnitude AllocationRate
-
-instance IsDataRate AllocationRate where
-  toDataRate = AllocationRate
-  fromDataRate = getAllocationRate
-
-instance Improving AllocationRate -- more throughput is better
-
-instance Base AllocationRate where
-  base _ = 2
-
-instance Similar AllocationRate where
-  sim b
-    (DataRate (Megabytes mbps :: SomeSpace) (_ :: SomeTime))
-    (DataRate (Megabytes mbps' :: SomeSpace) (_ :: SomeTime))
-      = sim b mbps mbps'
-
-----------------------------------------
--- Deallocation Rate
-
-newtype DeallocationRate = DeallocationRate { getDeallocationRate :: SomeDataRate }
-  deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON,Pretty)
-
-instance Vary DeallocationRate
-
-instance Magnitude DeallocationRate
-
-instance IsDataRate DeallocationRate where
-  toDataRate = DeallocationRate
-  fromDataRate = getDeallocationRate
-
-instance Improving DeallocationRate -- more throughput is better
-
-instance Base DeallocationRate where
-  base _ = 2
-
-instance Similar DeallocationRate where
-  sim b
-    (DataRate (Megabytes mbps :: SomeSpace) (_ :: SomeTime))
-    (DataRate (Megabytes mbps' :: SomeSpace) (_ :: SomeTime))
-      = sim b mbps mbps'
-
