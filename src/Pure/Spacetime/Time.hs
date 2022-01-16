@@ -5,10 +5,10 @@
 module Pure.Spacetime.Time where
 
 import Pure.Variance
+import qualified Pure.Data.Time as Time
 import Pure.Data.JSON hiding (pretty)
 
 import Pure.Spacetime.Improving
-import Pure.Spacetime.Similar
 import Pure.Spacetime.Base
 import Pure.Spacetime.Magnitude
 
@@ -31,6 +31,10 @@ class IsTime a where
 instance IsTime Seconds where
   toTime = id
   fromTime = id
+
+instance IsTime Time.Time where
+  toTime (Nanoseconds ns) = Time.Nanoseconds (round ns)
+  fromTime (Time.Nanoseconds ns) = Nanoseconds (fromIntegral ns)
 
 pattern Hours :: IsTime t => Double -> t
 pattern Hours s <- ((/60^2) . getSeconds . fromTime -> s) where

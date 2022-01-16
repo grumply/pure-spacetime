@@ -32,6 +32,7 @@ library
       base
     , pure
     , pure-json
+    , pure-time
     , pure-variance
 
   hs-source-dirs:      src

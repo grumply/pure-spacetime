@@ -8,7 +8,6 @@ import Pure.Variance
 import Pure.Data.JSON
 
 import Pure.Spacetime.Improving
-import Pure.Spacetime.Similar
 import Pure.Spacetime.Magnitude
 import Pure.Spacetime.Base
 
@@ -29,9 +28,6 @@ instance Vary SpaceInBytes
 
 instance Base SpaceInBytes where
   base _ = 2 -- based on my ingrained intuition
-
-instance Similar SpaceInBytes where -- intuitionistic; megabytes
-  sim b (Megabytes b1) (Megabytes b2) = sim b b1 b2
 
 instance Magnitude SpaceInBytes where -- intuitionistic; megabytes
   mag b (Megabytes b1) (Megabytes b2) = mag b b1 b2

@@ -9,7 +9,6 @@ import Pure.Variance
 
 import Pure.Spacetime.Base
 import Pure.Spacetime.Magnitude
-import Pure.Spacetime.Similar
 
 import GHC.Generics
 
@@ -19,7 +18,6 @@ newtype Multiplier = Multiplier_ { getMultiplier :: Double }
   deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON)
 instance Vary Multiplier
 instance Base Multiplier
-instance Similar Multiplier
 instance Magnitude Multiplier
 
 class IsMultiplier f where

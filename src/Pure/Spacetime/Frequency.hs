@@ -8,7 +8,6 @@ import Pure.Variance
 import Pure.Data.JSON
 
 import Pure.Spacetime.Improving
-import Pure.Spacetime.Similar
 import Pure.Spacetime.Magnitude
 import Pure.Spacetime.Base
 import Pure.Spacetime.Space
@@ -28,7 +27,6 @@ newtype Hertz = Hertz_ { getHertz :: Double }
   deriving (Generic,Eq,Ord,Num,Real,Fractional,Floating,RealFrac,RealFloat,Read,Show,ToJSON,FromJSON)
 
 instance Vary Hertz
-instance Similar Hertz
 instance Magnitude Hertz
 instance Improving Hertz
 

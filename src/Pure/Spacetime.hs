@@ -6,7 +6,6 @@
 {-# LANGUAGE ExistentialQuantification #-}
 module Pure.Spacetime (module Pure.Spacetime, module Export) where
 
-
 import Pure.Variance
 import Pure.Data.JSON
 
@@ -39,8 +38,6 @@ instance Vary BytesPerSecond
 instance Improving BytesPerSecond
 
 instance Magnitude BytesPerSecond
-
-instance Similar BytesPerSecond
 
 instance IsDataRate BytesPerSecond where
   toDataRate = id

@@ -12,34 +12,29 @@ import Data.Word
 import GHC.Generics
 
 class Magnitude a where
-  mag :: (Real b) => b -> a -> a -> Bool
+  mag :: Real b => b -> a -> a -> Bool
 
   default mag :: (Generic a,GMagnitude (Rep a),Real b) => b -> a -> a -> Bool
   mag b x y = gmag b (from x) (from y)
 
-magReals :: (Eq a, Real a, Real b) => b -> a -> a -> Bool
-magReals (realToFrac -> b) (realToFrac -> x) a@(realToFrac -> y)=
-  let o = realToFrac $ floor (logBase b (x :: Double)) + 1
-      hi :: Double
-      hi = b ** o
-      e = x / (logBase b o + 1)
-  in y <= hi + e
+magReal :: (Floating a, Real a, Real b) => b -> a -> a -> a
+magReal b x y
+  | x < 0 && y < 0 = go (abs x) (abs y)
+  | x < 0          = go (abs x) (y + x * (-2))
+  | y < 0          = go (x + y * (-2)) (abs y)
+  | otherwise      = go x y
+  where
+    go x y = abs (logBase (fromRational (toRational b)) ((x + 1) / (y + 1)))
+
+(*=) :: Magnitude a => a -> a -> Bool
+(*=) = mag (exp 1)
+infix 4 *=
 
 magnitude :: Magnitude a => a -> a -> Bool
 magnitude = mag (exp 1)
 
-instance Magnitude Double where mag = magReals
-instance Magnitude Float where mag = magReals
-instance Magnitude Int where mag = magReals
-instance Magnitude Integer where mag = magReals
-instance Magnitude Int64 where mag = magReals
-instance Magnitude Int32 where mag = magReals
-instance Magnitude Int16 where mag = magReals
-instance Magnitude Int8 where mag = magReals
-instance Magnitude Word64 where mag = magReals
-instance Magnitude Word32 where mag = magReals
-instance Magnitude Word16 where mag = magReals
-instance Magnitude Word8 where mag = magReals
+instance {-# INCOHERENT #-} (Floating a, Real a) => Magnitude a where 
+  mag b x y = magReal b x y <= 1
 
 class GMagnitude a where
   gmag :: (Real b) => b -> a x -> a x -> Bool

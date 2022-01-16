@@ -6,6 +6,8 @@
 {-# LANGUAGE FlexibleContexts #-}
 module Pure.Spacetime.Similar where
 
+import Pure.Spacetime.Magnitude
+
 import Data.Int
 import Data.Word
 
@@ -16,29 +18,27 @@ class Similar a where
   default sim :: (Generic a,GSimilar (Rep a),Real b) => b -> a -> a -> Bool
   sim b x y = gsim b (from x) (from y)
 
-similarReals :: (Eq a, Real a, Real b) => b -> a -> a -> Bool
-similarReals _ 0 0 = True
-similarReals (realToFrac -> b) (realToFrac -> x) (realToFrac -> y) =
-      -- As b ↘ 1, epsilon ↘ 0
-      let epsilon = (x :: Double) / (logBase b (x + 1) + 1)
-          (lo,hi) = (x - epsilon,x + epsilon)
-      in lo <= y && y <= hi
+simReal :: (Floating a, Real a, Real b) => b -> a -> a -> a
+simReal b x y
+  | x < 0 && y < 0 = simReal b (abs x) (abs y)
+  | x < 0          = simReal b (abs x) (y + x * (-2))
+  | y < 0          = simReal b (x + y * (-2)) (abs y)
+  | x < 1 && y < 1 = go (x ** (-1)) (y ** (-1))
+  | x < 1          = go (x ** (-1)) y
+  | y < 1          = go x (y ** (-1))
+  | otherwise      = go x y
+  where
+    go = magReal b
+
+(~=) :: Similar a => a -> a -> Bool
+(~=) = sim (exp 1)
+infix 4 ~=
 
 similar :: (Similar a) => a -> a -> Bool
 similar = sim (exp 1)
 
-instance Similar Double where sim = similarReals
-instance Similar Float where sim = similarReals
-instance Similar Int where sim = similarReals
-instance Similar Integer where sim = similarReals
-instance Similar Int64 where sim = similarReals
-instance Similar Int32 where sim = similarReals
-instance Similar Int16 where sim = similarReals
-instance Similar Int8 where sim = similarReals
-instance Similar Word64 where sim = similarReals
-instance Similar Word32 where sim = similarReals
-instance Similar Word16 where sim = similarReals
-instance Similar Word8 where sim = similarReals
+instance {-# INCOHERENT #-} (Floating a, Real a) => Similar a where 
+  sim b x y = simReal b x y <= 1
 
 class GSimilar a where
   gsim :: (Real b) => b -> a x -> a x -> Bool

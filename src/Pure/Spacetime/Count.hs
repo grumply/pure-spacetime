@@ -8,7 +8,6 @@ import Pure.Data.JSON hiding (pretty)
 import Pure.Variance
 
 import Pure.Spacetime.Improving
-import Pure.Spacetime.Similar
 import Pure.Spacetime.Magnitude
 import Pure.Spacetime.Base
 
@@ -22,7 +21,7 @@ import GHC.Generics
 import Text.Printf
 
 newtype Count = Count_ { getCount :: Double }
-  deriving (Generic,Eq,Ord,Num,Read,Show,Real,Floating,Fractional,RealFrac,Base,Similar,ToJSON,FromJSON,Magnitude)
+  deriving (Generic,Eq,Ord,Num,Read,Show,Real,Floating,Fractional,RealFrac,Base,ToJSON,FromJSON,Magnitude)
 
 instance Vary Count
 
